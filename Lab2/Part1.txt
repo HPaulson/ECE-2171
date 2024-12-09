@@ -1,0 +1,5 @@
+Hunter Paulson Lab 2 Part I
+
+a. To chek the status of bit 10 you could check if KEY_value == 10. This means that KEY10 is on
+b. To slow down the speed of the rotating LEDs you could lower the initial delay value (350000) in this line: for (delay_count = 350000; delay_count != 0; --delay_count)
+c. You could turn all the LEDs off by setting the register to all 0, i.e LED_bits = 0;

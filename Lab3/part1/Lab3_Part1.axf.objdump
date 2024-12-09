@@ -1,0 +1,83 @@
+
+C:/Users/hpaulson/Documents/Lab3/part1/Lab3_Part1.axf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00000000 <__cs3_interrupt_vector>:
+
+.text //code follows 
+.global _start
+
+_start: //Load value of RESULT label (which is the address of that line in memory) into R4
+        LDR R4, =RESULT 
+   0:	e59f4064 	ldr	r4, [pc, #100]	; 6c <NUMBERS+0x28>
+        // []s denote that we go to the address inside the brackets and get the contents
+        // Get the contents of address R4 (The address where result is) + 4
+        // Each .word down below takes 4 bytes (so offseting from RESULT) to RESULT + 4 is the address of N
+        // This instruction gets the value in memory at the address N is referring to as a label and stores it in R2
+        LDR R2, [R4, #4]
+   4:	e5942004 	ldr	r2, [r4, #4]
+        //R3 = Base address of RESULT (R4) + 8
+        ADD R3, R4, #8 
+   8:	e2843008 	add	r3, r4, #8
+        //Go to address stored in R3 (Base address of RESULT (R4) + 8) gets the contents and store in R0
+        //The address at R4 + 8 is refencing the start of the list of numbers (NUMBERS) below. So R0 would get the value 4 to start
+        LDR R0, [R3] 
+   c:	e5930000 	ldr	r0, [r3]
+
+00000010 <LOOP>:
+
+LOOP:   SUB R2, R2, #1 // Subtract one to keep track of how many numbers are left
+  10:	e2422001 	sub	r2, r2, #1
+        //CMP is basically a substraction, but sets processor flags that tell the processor if the result was negative, zero, and an unsigned or signed overflow
+        CMP R2, #0  // If R2 is 0, we have chacked all 7 numbers (We are done the loop)
+  14:	e3520000 	cmp	r2, #0
+        //The branch instruction uses the processor flags to determine the next instruction to execute
+        //BEQ is checking if the zero of the comparison was equal (i.e. if we subtract the two and get 0)
+        //If equal, then the progam jumps to the DONE label, otherwise it executes the next instruction
+        BEQ DONE // exit loop. Otherwise:
+  18:	0a000005 	beq	34 <DONE>
+        ADD R3, R3, #4 // Set R3 to the address of the next number in the list
+  1c:	e2833004 	add	r3, r3, #4
+        LDR R1, [R3] // Set R1 to contents of R3
+  20:	e5931000 	ldr	r1, [r3]
+        CMP R0, R1 // Comapre R0 (existing max) and R1 (conents of current number), so we can update the current max if needed
+  24:	e1500001 	cmp	r0, r1
+        // Check the ECE2170 Assembly guide for the Branch codes (i.e. GE)
+        BGE LOOP // If R0 >= R1, run the loop again to keep checking
+  28:	aafffff8 	bge	10 <LOOP>
+        MOV R0, R1 // Set R0 to R1 (the contents of R3) because it is larger than the current value of R0 (the current max)
+  2c:	e1a00001 	mov	r0, r1
+        //What is the difference between a B and a B<cond>, such as BGE?
+        B LOOP // Run the loop again, with no conditional. We always run again regardless of previous CMP flag.
+  30:	eafffff6 	b	10 <LOOP>
+
+00000034 <DONE>:
+
+DONE:   STR R0, [R4] // Put contents of R0 into the address of R4. Result points to R4, so this allows RESULT to store the correct max value
+  34:	e5840000 	str	r0, [r4]
+
+00000038 <END>:
+
+END:    B END
+  38:	eafffffe 	b	38 <END>
+
+0000003c <RESULT>:
+  3c:	00000000 	.word	0x00000000
+
+00000040 <N>:
+  40:	0000000a 	.word	0x0000000a
+
+00000044 <NUMBERS>:
+  44:	fffffff7 	.word	0xfffffff7
+  48:	00000001 	.word	0x00000001
+  4c:	0000000a 	.word	0x0000000a
+  50:	fffffffb 	.word	0xfffffffb
+  54:	00000004 	.word	0x00000004
+  58:	0000000c 	.word	0x0000000c
+  5c:	fffffffc 	.word	0xfffffffc
+  60:	00000008 	.word	0x00000008
+  64:	00000020 	.word	0x00000020
+  68:	00000005 	.word	0x00000005
+  6c:	0000003c 	.word	0x0000003c

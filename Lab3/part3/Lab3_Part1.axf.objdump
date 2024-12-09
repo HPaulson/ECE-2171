@@ -1,0 +1,71 @@
+
+C:/Users/hpaulson/Documents/Lab3/part3/Lab3_Part1.axf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00000000 <__cs3_interrupt_vector>:
+Hunter Paulson - ECE 2161 Lab 3 Part 3
+*/
+.text
+.global _start
+_start: 
+LDR R0, =0xFF200020 // Address of seven segment display
+   0:	e59f0068 	ldr	r0, [pc, #104]	; 70 <NUMBERS+0x40>
+LDR R1, =0xFF200050 // Address of KEY register
+   4:	e59f1068 	ldr	r1, [pc, #104]	; 74 <NUMBERS+0x44>
+MOV R4, #0 // The number currently on seven seg
+   8:	e3a04000 	mov	r4, #0
+LDR R5, =NUMBERS // Address of array
+   c:	e59f5064 	ldr	r5, [pc, #100]	; 78 <NUMBERS+0x48>
+BL SUB1 //call subroutine at SUB1
+  10:	eb000000 	bl	18 <SUB1>
+
+00000014 <END>:
+END: B END //stop here
+  14:	eafffffe 	b	14 <END>
+
+00000018 <SUB1>:
+// R5 - Address of array
+
+SUB1:
+//instructions for SUB1 go here
+	// Load updated values of key and display
+	LDR R2, [R0]
+  18:	e5902000 	ldr	r2, [r0]
+	LDR R3, [R1]
+  1c:	e5913000 	ldr	r3, [r1]
+    LDR R6, [R5, R4]
+  20:	e7956004 	ldr	r6, [r5, r4]
+    STR R6, [R0]
+  24:	e5806000 	str	r6, [r0]
+    
+
+	// CMP R3, #0  // If KEY0 is pressed
+
+	B SUB1 // Infinite loop
+  28:	eafffffa 	b	18 <SUB1>
+
+BX LR // End of the subroutine; Won't execute because infinite loop.
+  2c:	e12fff1e 	bx	lr
+
+00000030 <NUMBERS>:
+  30:	0000003f 	.word	0x0000003f
+  34:	00000006 	.word	0x00000006
+  38:	0000005b 	.word	0x0000005b
+  3c:	0000004f 	.word	0x0000004f
+  40:	00000066 	.word	0x00000066
+  44:	0000006d 	.word	0x0000006d
+  48:	0000007d 	.word	0x0000007d
+  4c:	00000007 	.word	0x00000007
+  50:	0000007f 	.word	0x0000007f
+  54:	00000067 	.word	0x00000067
+  58:	00000077 	.word	0x00000077
+  5c:	0000007c 	.word	0x0000007c
+  60:	00000058 	.word	0x00000058
+  64:	0000005e 	.word	0x0000005e
+  68:	00000079 	.word	0x00000079
+  6c:	00000071 	.word	0x00000071
+  70:	ff200020 	.word	0xff200020
+  74:	ff200050 	.word	0xff200050
+  78:	00000030 	.word	0x00000030

@@ -1,0 +1,19 @@
+main() {
+Get register for keys & hex
+
+Check if key0 pressed using AND 1, if so, set hex register defreference to 0
+Check if key 1 pressed using AND 2, if so, increment current number. Check bounds. Set hex register defreference to new value
+Check if key 2 pressed using AND 4, if so, decrement current number. Check bounds. Set hex register defreference to new value
+Check if key 3 pressed using AND 8, if so, set hex register defreference to -1
+
+
+}
+
+bounds_check(int x) {
+if (x<=0) set display to 0
+if (x>=9) set display to 9
+}
+
+get_binary(int x) {
+Take in integer 0-9, return binary to display on hex using an array index
+}
